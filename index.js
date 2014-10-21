@@ -33,7 +33,11 @@ client.fetchPlugins().then(function(plugins) {
 }).map(function(plugin) {
   var label = plugin.name+'@'+plugin.version
   if (plugin.outdated)
-    console.log(chalk.green('✓'), label, 'is on npm');
-  else
     console.log(chalk.red('✘'), label, 'is NOT on npm');
+  else
+    console.log(chalk.green('✓'), label, 'is on npm');
+}).error(function(err) {
+  console.error(err.stack);
+}).catch(function(err) {
+  console.error(err.stack);
 })
