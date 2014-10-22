@@ -20,11 +20,13 @@ client.fetchPlugins().then(function(plugins) {
   return new Promise(function(resolve, reject) {
     needle.get(plugin.registryURL, function(err, res) {
       if (err) return reject(err);
+      plugin.npm = res.body
       if (res.body.error) {
         if (! /version not found/.test(res.body.error))
           return reject(new Error(res.body.error))
         plugin.outdated = true;
       } else {
+        //console.log(res.body.author, res.body.maintainers);
         plugin.outdated = false;
       }
       resolve(plugin)
@@ -32,8 +34,9 @@ client.fetchPlugins().then(function(plugins) {
   });
 }).map(function(plugin) {
   var label = plugin.name+'@'+plugin.version
+    console.log(plugin.npm.maintainers)
   if (plugin.outdated)
-    console.log(chalk.red('✘'), label, 'is NOT on npm');
+    console.log(chalk.red('✘'), label, 'is NOT on npm', plugin.npm.maintainers);
   else
     console.log(chalk.green('✓'), label, 'is on npm');
 }).error(function(err) {
